@@ -32,6 +32,6 @@ class WeatherApiClient {
     }
 
     final weatherJson = jsonDecode(weatherResponse.body) as List;
-    return Weather.formJson(weatherJson);
+    return Weather.fromJson(weatherJson);
   }
 }

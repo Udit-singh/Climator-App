@@ -4,7 +4,7 @@ enum WeatherCondition {
   snow,
   sleet,
   hail,
-  thunderstrom,
+  thunderstorm,
   heavyRain,
   lightRain,
   showers,
@@ -35,29 +35,32 @@ class Weather extends Equatable {
     this.created,
     this.lastUpdated,
     this.location,
-  }) : super([
-          condition,
-          formattedCondition,
-          minTemp,
-          temp,
-          maxTemp,
-          locationId,
-          created,
-          lastUpdated,
-          location,
-        ]);
+  });
 
-  static Weather formJson(dynamic json) {
-    final consolidateWeather = json['consolidated_weather'][0];
+  @override
+  List<Object> get props => [
+        condition,
+        formattedCondition,
+        minTemp,
+        temp,
+        maxTemp,
+        locationId,
+        created,
+        lastUpdated,
+        location,
+      ];
+
+  static Weather fromJson(dynamic json) {
+    final consolidatedWeather = json['consolidated_weather'][0];
     return Weather(
       condition: _mapStringToWeatherCondition(
-          consolidateWeather['weather_state_abbr']),
-      formattedCondition: consolidateWeather['weather_state_name'],
-      minTemp: consolidateWeather['min_temp'] as double,
-      temp: consolidateWeather['the_temp'] as double,
-      maxTemp: consolidateWeather['max_temp'] as double,
+          consolidatedWeather['weather_state_abbr']),
+      formattedCondition: consolidatedWeather['weather_state_name'],
+      minTemp: consolidatedWeather['min_temp'] as double,
+      temp: consolidatedWeather['the_temp'] as double,
+      maxTemp: consolidatedWeather['max_temp'] as double,
       locationId: json['woeid'] as int,
-      created: consolidateWeather['created'],
+      created: consolidatedWeather['created'],
       lastUpdated: DateTime.now(),
       location: json['title'],
     );
@@ -69,11 +72,14 @@ class Weather extends Equatable {
       case 'sn':
         state = WeatherCondition.snow;
         break;
-      case 's1':
+      case 'sl':
         state = WeatherCondition.sleet;
         break;
+      case 'h':
+        state = WeatherCondition.hail;
+        break;
       case 't':
-        state = WeatherCondition.sleet;
+        state = WeatherCondition.thunderstorm;
         break;
       case 'hr':
         state = WeatherCondition.heavyRain;
